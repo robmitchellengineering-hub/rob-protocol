@@ -6,9 +6,9 @@
 :root {
   --bg: #05070d;
   --bg-2: #0a0f1a;
-  --ink: #e7edf7;
-  --ink-dim: #9aa7bd;
-  --ink-faint: #5c6a82;
+  --ink: #f6f9ff;
+  --ink-dim: #c6d1e2;
+  --ink-faint: #8b99b3;
   --cyan: #22d3ee;
   --blue: #38bdf8;
   --violet: #a78bfa;
@@ -16,8 +16,8 @@
   --amber: #fbbf24;
   --pink: #f472b6;
   --red: #f87171;
-  --glass: rgba(255, 255, 255, 0.035);
-  --glass-brd: rgba(255, 255, 255, 0.08);
+  --glass: rgba(9, 13, 22, 0.62);
+  --glass-brd: rgba(255, 255, 255, 0.12);
   --font: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
@@ -74,13 +74,13 @@ main { position: relative; z-index: 2; }
 .stage-inner { max-width: 46rem; }
 
 .stage-inner.panel {
-  background: var(--glass);
+  background: linear-gradient(160deg, rgba(10, 14, 24, 0.86), rgba(7, 10, 18, 0.8));
   border: 1px solid var(--glass-brd);
   border-radius: 20px;
   padding: clamp(1.5rem, 3.5vw, 2.75rem);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 30px 80px -30px rgba(0,0,0,.8), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter: blur(22px) saturate(130%);
+  -webkit-backdrop-filter: blur(22px) saturate(130%);
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.07);
 }
 
 .eyebrow {
@@ -190,6 +190,12 @@ h2 {
   flex-direction: column;
   gap: .55rem;
   max-width: 26rem;
+  background: var(--glass);
+  border: 1px solid var(--glass-brd);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 .depth-row { display: flex; align-items: center; gap: .8rem; font-family: var(--mono); font-size: .78rem; color: var(--ink-dim); }
 .depth-row span { width: 5.2rem; text-transform: uppercase; letter-spacing: .1em; }
@@ -308,3 +314,49 @@ h2 {
   .tier { grid-template-columns: 7rem 1fr 4.8rem; }
   .stat { min-width: 7rem; }
 }
+
+/* ============ adaptive text contrast ============ */
+/* text color follows the animation behind it: light on dark, dark on bright */
+.stage-inner {
+  --txt: #f6f9ff;
+  --txt-dim: #c6d1e2;
+  --txt-faint: #8b99b3;
+}
+.stage-inner[data-contrast="dark"] {
+  --txt: #0a1020;
+  --txt-dim: #1b2740;
+  --txt-faint: #2e3c58;
+}
+.stage-inner h1, .stage-inner h2, .stage-inner p, .stage-inner .eyebrow {
+  transition: color .55s ease;
+}
+.stage-inner h1, .stage-inner h2 {
+  color: var(--txt) !important;
+  text-shadow: 0 2px 26px rgba(0, 0, 0, .6);
+}
+.stage-inner p { color: var(--txt-dim) !important; }
+.stage-inner p strong, .stage-inner p em { color: var(--txt) !important; }
+.stage-inner .lede { color: var(--txt-dim) !important; }
+.stage-inner .muted, .stage-inner p.muted { color: var(--txt-faint) !important; }
+.stage-inner[data-contrast="dark"] h1,
+.stage-inner[data-contrast="dark"] h2,
+.stage-inner[data-contrast="dark"] p {
+  text-shadow: 0 2px 22px rgba(255, 255, 255, .4);
+}
+.stage-inner[data-contrast="dark"] .grad {
+  background: linear-gradient(100deg, #0e7490, #1d4ed8 45%, #6d28d9);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.stage-inner[data-contrast="dark"] .eyebrow { color: #0891b2 !important; }
+
+/* hero + outro: a soft scrim behind the text side, dimming the worst of the glow */
+.hero::before, .outro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(5,7,13,.72) 0%, rgba(5,7,13,.5) 32%, rgba(5,7,13,.22) 55%, transparent 74%);
+}
+.hero .stage-inner, .outro .stage-inner { position: relative; z-index: 1; }
